@@ -17,8 +17,8 @@ model Item {
   completed  Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  User       User?    @relation(fields: [user_id], references: [id])
-  user_id    String?
+  User       User     @relation(fields: [user_id], references: [id])
+  user_id    String
 }
 
 model User {

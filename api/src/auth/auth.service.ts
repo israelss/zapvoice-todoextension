@@ -20,8 +20,8 @@ export class AuthService {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) return null;
 
-    const hash = await Hash.createHash(password);
-    if (user.password_hash !== hash) return null;
+    const isValidPassword = await Hash.validate(password, user.password_hash);
+    if (!isValidPassword) return null;
 
     return {
       user_id: user.id,

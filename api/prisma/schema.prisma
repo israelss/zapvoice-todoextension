@@ -14,6 +14,16 @@ model Item {
   id         String   @id @default(uuid())
   title      String
   content    String
+  completed  Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  User       User?    @relation(fields: [user_id], references: [id])
+  user_id    String?
+}
+
+model User {
+  id            String @id @default(uuid())
+  email         String
+  password_hash String
+  items         Item[]
 }

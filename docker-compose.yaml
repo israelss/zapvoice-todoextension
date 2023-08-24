@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  api:
+    build: ./api
+    container_name: api
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/home/node/app
+
+  db:
+    image: bitnami/mysql:latest
+    container_name: db
+    restart: always
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env.db
+    healthcheck:
+      test: ["CMD", "/opt/bitnami/scripts/mysql/healthcheck.sh"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+    volumes:
+      - mysql_data:/bitnami/mysql/data
+
+volumes:
+  mysql_data:
+    driver: local

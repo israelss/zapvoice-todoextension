@@ -23,7 +23,7 @@ model Item {
 
 model User {
   id            String @id @default(uuid())
-  email         String
+  email         String @unique
   password_hash String
   items         Item[]
 }

@@ -18,10 +18,10 @@ export class AuthService {
     password: string,
   ): Promise<CurrentUser | null> {
     const user = await this.usersService.findOneByEmail(email);
-    if (!user) return null;
+    if (user === null) return null;
 
     const isValidPassword = await Hash.validate(password, user.password_hash);
-    if (!isValidPassword) return null;
+    if (isValidPassword === false) return null;
 
     return {
       user_id: user.id,

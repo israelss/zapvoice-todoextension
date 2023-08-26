@@ -9,7 +9,6 @@ async function tryFetch(url: string, requestInit: RequestInit) {
   const access_token = (await chrome.storage.sync.get("access_token"))[
     "access_token"
   ];
-  console.log(requestInit);
   const options = {
     ...requestInit,
     headers: {
@@ -17,7 +16,6 @@ async function tryFetch(url: string, requestInit: RequestInit) {
       Authorization: `Bearer ${access_token}`,
     },
   };
-  console.log(options);
   try {
     const response = await fetch(url, options);
     return await response.json();

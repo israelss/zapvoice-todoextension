@@ -1,6 +1,5 @@
 import {
   CreateItemRequest,
-  FetchedItem,
   Item,
   MarkAsCompleteItemRequest,
 } from "../interfaces/interfaces";
@@ -13,14 +12,7 @@ export const itemsApi = (apiBaseUrl: string) => ({
   },
 
   getAll: async function (): Promise<Item[]> {
-    const data = (await get<FetchedItem[]>(`${apiBaseUrl}/items`)) ?? [];
-    return (
-      data.map((item) => ({
-        ...item,
-        created_at: new Date(item.created_at),
-        updated_at: new Date(item.updated_at),
-      })) ?? []
-    );
+    return (await get<Item[]>(`${apiBaseUrl}/items`)) ?? [];
   },
 
   markAsComplete: async function ({

@@ -20,6 +20,7 @@ export class ItemsService {
 
   async findAll(user_id: string) {
     const items = await this.prismaService.item.findMany({
+      orderBy: { created_at: 'asc' },
       where: {
         user_id,
       },

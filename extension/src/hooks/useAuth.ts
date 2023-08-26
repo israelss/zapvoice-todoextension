@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { ExtensionMessage } from "@/interfaces/interfaces";
+import { useEffect, useState } from "react";
 import { useItems } from "./useItems";
 
 export const useAuth = () => {
@@ -16,6 +16,10 @@ export const useAuth = () => {
         setIsAuthorized(true);
         const email = (await chrome.storage.sync.get(emailKey))[emailKey];
         setEmail(email);
+        chrome.runtime.sendMessage<ExtensionMessage>({
+          type: "GET_ITEMS_REQUEST",
+          payload: null,
+        });
       }
     })();
   }, []);

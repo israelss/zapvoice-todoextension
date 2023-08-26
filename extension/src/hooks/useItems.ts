@@ -1,7 +1,7 @@
 import { ExtensionMessage, Item } from "@/interfaces/interfaces";
 import { useCallback, useEffect, useState } from "react";
 
-export const useItems = (newTodoValue: string = "") => {
+export const useItems = () => {
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
@@ -30,18 +30,23 @@ export const useItems = (newTodoValue: string = "") => {
     };
   }, []);
 
-  const addItem = () => {
-    if (newTodoValue.length > 0) {
-      chrome.runtime.sendMessage<ExtensionMessage>({
-        type: "CREATE_ITEM_REQUEST",
-        payload: { content: newTodoValue },
-      });
-    }
+  const addItem = (content: string) => {
+    chrome.runtime.sendMessage<ExtensionMessage>({
+      type: "CREATE_ITEM_REQUEST",
+      payload: { content },
+    });
   };
 
   const clearItems = useCallback(() => {
     setItems([]);
   }, []);
 
-  return { items, addItem, clearItems };
+  const markItemAsComplete = (itemId: string) => {
+    chrome.runtime.sendMessage<ExtensionMessage>({
+      type: "COMPLETE_ITEM_REQUEST",
+      payload: { id: itemId },
+    });
+  };
+
+  return { items, addItem, clearItems, markItemAsComplete };
 };

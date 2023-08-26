@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,7 +35,6 @@ export const AuthForm = ({ formType }: { formType: "login" | "register" }) => {
       },
     };
     chrome.runtime.sendMessage<ExtensionMessage>(payload);
-    console.log(values);
   }
 
   return (
@@ -49,7 +47,12 @@ export const AuthForm = ({ formType }: { formType: "login" | "register" }) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="email" {...field} />
+                <Input
+                  type="email"
+                  autoComplete="email"
+                  placeholder="email"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -62,13 +65,22 @@ export const AuthForm = ({ formType }: { formType: "login" | "register" }) => {
             <FormItem>
               <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input placeholder="senha" {...field} />
+                <Input
+                  placeholder="senha"
+                  type="password"
+                  autoComplete={
+                    formType === "login" ? "current-password" : "new-password"
+                  }
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Enviar</Button>
+        <Button className="w-full" type="submit">
+          {formType === "login" ? "Entrar" : "Cadastrar"}
+        </Button>
       </form>
     </Form>
   );

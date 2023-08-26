@@ -2,11 +2,6 @@ export type Item = {
   id: string;
   content: string;
   completed: boolean;
-  created_at: Date;
-  updated_at: Date;
-};
-
-export type FetchedItem = Omit<Item, "created_at" | "updated_at"> & {
   created_at: string;
   updated_at: string;
 };

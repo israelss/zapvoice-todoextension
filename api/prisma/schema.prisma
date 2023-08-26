@@ -12,7 +12,6 @@ datasource db {
 
 model Item {
   id         String   @id @default(uuid())
-  title      String
   content    String
   completed  Boolean  @default(false)
   created_at DateTime @default(now())

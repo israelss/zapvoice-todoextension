@@ -1,50 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma/prisma.service';
+import { excludeField } from '../prisma/utils/utils';
 import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
 
 @Injectable()
 export class ItemsService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createItemDto: CreateItemDto, user_id: string) {
-    return this.prismaService.item.create({
+  async create(createItemDto: CreateItemDto, user_id: string) {
+    await this.prismaService.item.create({
       data: {
         ...createItemDto,
         user_id,
       },
     });
+
+    return true;
   }
 
-  findAll(user_id: string) {
-    return this.prismaService.item.findMany({
+  async findAll(user_id: string) {
+    const items = await this.prismaService.item.findMany({
       where: {
         user_id,
       },
     });
+    return items.map((item) => excludeField(item, ['user_id']));
   }
 
-  findOne(id: string, user_id: string) {
-    return this.prismaService.item.findUnique({
-      where: {
-        id,
-        user_id,
-      },
-    });
-  }
-
-  update(id: string, updateItemDto: UpdateItemDto, user_id: string) {
-    return this.prismaService.item.update({
-      where: {
-        id,
-        user_id,
-      },
-      data: updateItemDto,
-    });
-  }
-
-  markAsComplete(id: string, user_id: string) {
-    return this.prismaService.item.update({
+  async markAsComplete(id: string, user_id: string) {
+    await this.prismaService.item.update({
       where: {
         id,
         user_id,
@@ -53,5 +37,7 @@ export class ItemsService {
         completed: true,
       },
     });
+
+    return true;
   }
 }

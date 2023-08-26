@@ -11,7 +11,16 @@ services:
     volumes:
       - ./api:/home/node/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+  extension:
+    build: ./extension
+    container_name: extension
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./extension:/home/node/app
 
   db:
     image: bitnami/mysql:latest

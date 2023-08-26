@@ -30,18 +30,35 @@ chrome.runtime.onMessage.addListener(
       }
       case "CREATE_ITEM_REQUEST": {
         const success = await Api.items.create(payload);
-        chrome.runtime.sendMessage<ExtensionMessage>({
-          type: "CREATE_ITEM_RESPONSE",
-          payload: success,
-        });
+        if (success) {
+          const items = await Api.items.getAll();
+          chrome.runtime.sendMessage<ExtensionMessage>({
+            type: "GET_ITEMS_RESPONSE",
+            payload: items,
+          });
+        }
         break;
       }
       case "COMPLETE_ITEM_REQUEST": {
         const success = await Api.items.markAsComplete(payload);
-        chrome.runtime.sendMessage<ExtensionMessage>({
-          type: "COMPLETE_ITEM_RESPONSE",
-          payload: success,
-        });
+        if (success) {
+          const items = await Api.items.getAll();
+          chrome.runtime.sendMessage<ExtensionMessage>({
+            type: "GET_ITEMS_RESPONSE",
+            payload: items,
+          });
+        }
+        break;
+      }
+      case "REMOVE_ITEM_REQUEST": {
+        const success = await Api.items.remove(payload);
+        if (success) {
+          const items = await Api.items.getAll();
+          chrome.runtime.sendMessage<ExtensionMessage>({
+            type: "GET_ITEMS_RESPONSE",
+            payload: items,
+          });
+        }
         break;
       }
     }

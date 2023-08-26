@@ -7,14 +7,23 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useItems } from "@/hooks/useItems";
-import { useRef, useState } from "react";
+import { Item } from "@/interfaces/interfaces";
+import { LaughIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export const ItemsPage = () => {
   const newTodoInputRef = useRef<HTMLInputElement>(null);
+
   const [addButtonDisabled, setAddButtonDisabled] = useState<boolean>(true);
+  const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
+
   const { items, addItem } = useItems();
   const { email, logout } = useAuth();
+
+  useEffect(() => {
+    setFilteredItems(items.filter((item) => showCompleted || !item.completed));
+  }, [items, showCompleted]);
 
   return (
     <>
@@ -58,14 +67,19 @@ export const ItemsPage = () => {
       </div>
 
       <ScrollArea className="mt-2 h-[300px] rounded-md border p-4 ">
-        {items
-          .filter((item) => showCompleted || !item.completed)
-          .map((item, index, array) => (
+        {filteredItems.length === 0 ? (
+          <div className="grid w-full h-[232px] place-items-center place-content-center gap-4">
+            <LaughIcon className="w-20 h-20 stroke-1" />
+            <h1 className="text-2xl">Sem tarefas</h1>
+          </div>
+        ) : (
+          filteredItems.map((item, index, array) => (
             <div key={item.id}>
               <TodoItem item={item} />
               {index < array.length - 1 && <Separator className="my-2" />}
             </div>
-          ))}
+          ))
+        )}
       </ScrollArea>
     </>
   );

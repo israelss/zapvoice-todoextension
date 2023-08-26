@@ -1,12 +1,12 @@
-import { AuthRequestData, AuthResponse } from "../interfaces/interfaces";
-import { post } from "./utils";
+import { AuthRequestPayload, AuthResponseData } from "../interfaces/interfaces";
+import { sendPost } from "./utils";
 
 export const authApi = (apiBaseUrl: string) => ({
   login: async function ({
     email,
     password,
-  }: AuthRequestData): Promise<AuthResponse | null> {
-    const data = await post<AuthResponse>(`${apiBaseUrl}/auth/login`, {
+  }: AuthRequestPayload): Promise<AuthResponseData | null> {
+    const data = await sendPost<AuthResponseData>(`${apiBaseUrl}/auth/login`, {
       email,
       password,
     });
@@ -17,11 +17,14 @@ export const authApi = (apiBaseUrl: string) => ({
   register: async function ({
     email,
     password,
-  }: AuthRequestData): Promise<AuthResponse | null> {
-    const data = await post<AuthResponse>(`${apiBaseUrl}/auth/register`, {
-      email,
-      password,
-    });
+  }: AuthRequestPayload): Promise<AuthResponseData | null> {
+    const data = await sendPost<AuthResponseData>(
+      `${apiBaseUrl}/auth/register`,
+      {
+        email,
+        password,
+      }
+    );
     if (data === null) return null;
     return data;
   },

@@ -6,7 +6,7 @@ function App() {
   const { isAuthorized } = useAuth();
 
   return (
-    <div className="flex flex-col h-[414px] w-[350px] p-4">
+    <div className="flex flex-col h-[476px] w-[400px] p-4">
       {isAuthorized ? <ItemsPage /> : <AuthPage />}
     </div>
   );

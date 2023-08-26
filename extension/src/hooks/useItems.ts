@@ -11,15 +11,6 @@ export const useItems = () => {
           setItems(payload);
           break;
         }
-        case "CREATE_ITEM_RESPONSE":
-        case "COMPLETE_ITEM_RESPONSE":
-          if (payload) {
-            chrome.runtime.sendMessage<ExtensionMessage>({
-              type: "GET_ITEMS_REQUEST",
-              payload: null,
-            });
-          }
-          break;
       }
     };
 
@@ -48,5 +39,12 @@ export const useItems = () => {
     });
   };
 
-  return { items, addItem, clearItems, markItemAsComplete };
+  const removeItem = (itemId: string) => {
+    chrome.runtime.sendMessage<ExtensionMessage>({
+      type: "REMOVE_ITEM_REQUEST",
+      payload: { id: itemId },
+    });
+  };
+
+  return { items, addItem, clearItems, markItemAsComplete, removeItem };
 };

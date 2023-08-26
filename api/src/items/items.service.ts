@@ -23,6 +23,7 @@ export class ItemsService {
       orderBy: { created_at: 'asc' },
       where: {
         user_id,
+        deleted_at: null,
       },
     });
     return items.map((item) => excludeField(item, ['user_id']));
@@ -33,9 +34,24 @@ export class ItemsService {
       where: {
         id,
         user_id,
+        deleted_at: null,
       },
       data: {
         completed: true,
+      },
+    });
+
+    return true;
+  }
+
+  async remove(id: string, user_id: string) {
+    await this.prismaService.item.update({
+      where: {
+        id,
+        user_id,
+      },
+      data: {
+        deleted_at: new Date(),
       },
     });
 

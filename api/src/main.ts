@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       origin: 'chrome-extension://jihhflcplkkkdncpmdjnjjaohholgoaf',
-      methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
+      methods: ['GET', 'POST', 'PATCH', 'OPTIONS', 'DELETE'],
     },
   });
   app.useGlobalFilters(new PrismaExceptionFilter());

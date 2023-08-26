@@ -5,6 +5,7 @@ import { useItems } from "./useItems";
 export const useAuth = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+  const [authError, setAuthError] = useState<string | null>(null);
   const { clearItems } = useItems();
 
   useEffect(() => {
@@ -55,5 +56,5 @@ export const useAuth = () => {
     chrome.storage.sync.clear();
   };
 
-  return { email, isAuthorized, logout };
+  return { email, isAuthorized, logout, authError };
 };

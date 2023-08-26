@@ -25,7 +25,7 @@ async function tryFetch(url: string, requestInit: RequestInit) {
   }
 }
 
-export async function post<T>(
+export async function sendPost<T>(
   url: string,
   data: Record<string, unknown>
 ): Promise<T | null> {
@@ -33,7 +33,7 @@ export async function post<T>(
   return await tryFetch(url, requestInit);
 }
 
-export async function patch<T>(
+export async function sendPatch<T>(
   url: string,
   data?: Record<string, unknown>
 ): Promise<T | null> {
@@ -47,7 +47,12 @@ export async function patch<T>(
   return await tryFetch(url, requestInit);
 }
 
-export async function get<T>(url: string): Promise<T | null> {
+export async function sendDelete<T>(url: string): Promise<T | null> {
+  const requestInit: RequestInit = { method: "DELETE" };
+  return await tryFetch(url, requestInit);
+}
+
+export async function sendGet<T>(url: string): Promise<T | null> {
   const requestInit: RequestInit = { method: "GET" };
   return await tryFetch(url, requestInit);
 }

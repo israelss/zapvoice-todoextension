@@ -6,28 +6,28 @@ export type Item = {
   updated_at: string;
 };
 
-export type CreateItemRequest = Pick<Item, "content">;
-export type MarkAsCompleteItemRequest = Pick<Item, "id">;
+export type CreateItemRequestPayload = Pick<Item, "content">;
+export type ItemIdPayload = Pick<Item, "id">;
 
-export type AuthRequestData = {
+export type AuthRequestPayload = {
   email: string;
   password: string;
 };
-export type AuthResponse = {
+export type AuthResponseData = {
   email: string;
   access_token: string;
 };
 
-export type GetItemsResponse = Item[];
+export type GetItemsResponseData = Item[];
 
 export type ExtensionMessage =
   | {
-      type: "COMPLETE_ITEM_REQUEST";
-      payload: MarkAsCompleteItemRequest;
+      type: "COMPLETE_ITEM_REQUEST" | "REMOVE_ITEM_REQUEST";
+      payload: ItemIdPayload;
     }
   | {
       type: "CREATE_ITEM_REQUEST";
-      payload: CreateItemRequest;
+      payload: CreateItemRequestPayload;
     }
   | {
       type: "GET_ITEMS_REQUEST";
@@ -35,13 +35,16 @@ export type ExtensionMessage =
     }
   | {
       type: "LOGIN_REQUEST" | "REGISTER_REQUEST";
-      payload: AuthRequestData;
+      payload: AuthRequestPayload;
     }
   | {
-      type: "COMPLETE_ITEM_RESPONSE" | "CREATE_ITEM_RESPONSE";
+      type:
+        | "COMPLETE_ITEM_RESPONSE"
+        | "CREATE_ITEM_RESPONSE"
+        | "REMOVE_ITEM_RESPONSE";
       payload: boolean;
     }
   | {
       type: "GET_ITEMS_RESPONSE";
-      payload: GetItemsResponse;
+      payload: GetItemsResponseData;
     };

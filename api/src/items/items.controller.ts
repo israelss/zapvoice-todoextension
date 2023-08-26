@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -36,5 +37,10 @@ export class ItemsController {
     @CurrentUser('user_id') user_id: string,
   ) {
     return this.itemsService.markAsComplete(id, user_id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @CurrentUser('user_id') user_id: string) {
+    return this.itemsService.remove(id, user_id);
   }
 }

@@ -1,13 +1,16 @@
 import { AuthForm } from "@/components/AuthForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
-} from "../components/ui/card";
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { useAuth } from "../hooks/useAuth";
 
 export const AuthPage = () => {
+  const { authError } = useAuth();
   return (
     <Tabs defaultValue="login">
       <TabsList className="grid items-center justify-center w-full grid-cols-2 p-1 rounded-lg h-9 bg-muted text-muted-foreground">
@@ -38,6 +41,9 @@ export const AuthPage = () => {
             <AuthForm formType={"login"} />
           </CardContent>
         </Card>
+        <CardFooter>
+          <p>{authError}</p>
+        </CardFooter>
       </TabsContent>
       <TabsContent
         className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

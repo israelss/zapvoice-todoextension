@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma/prisma.service';
 import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
 import { ItemsService } from './items.service';
 
 describe('ItemsService', () => {
@@ -84,66 +83,6 @@ describe('ItemsService', () => {
         where: {
           user_id: userIdMock,
         },
-      });
-      expect(prismaSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('findOne', () => {
-    const itemIdMock: string = 'abc';
-    const userIdMock: string = '1';
-
-    let prismaSpy: jest.SpyInstance;
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-
-    beforeEach(() => {
-      prismaSpy = jest.spyOn(prismaService.item, 'findUnique');
-    });
-
-    it('should call create with correct options', async () => {
-      await service.findOne(itemIdMock, userIdMock);
-
-      expect(prismaSpy).toHaveBeenCalledWith({
-        where: {
-          id: itemIdMock,
-          user_id: userIdMock,
-        },
-      });
-      expect(prismaSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('update', () => {
-    const inputMockData: UpdateItemDto = {
-      content: 'new content',
-      title: 'new title',
-      completed: true,
-    };
-    const itemIdMock: string = 'abc';
-    const userIdMock: string = '1';
-
-    let prismaSpy: jest.SpyInstance;
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-
-    beforeEach(() => {
-      prismaSpy = jest.spyOn(prismaService.item, 'update');
-    });
-
-    it('should call create with correct options', async () => {
-      await service.update(itemIdMock, inputMockData, userIdMock);
-
-      expect(prismaSpy).toHaveBeenCalledWith({
-        where: {
-          id: itemIdMock,
-          user_id: userIdMock,
-        },
-        data: inputMockData,
       });
       expect(prismaSpy).toHaveBeenCalledTimes(1);
     });

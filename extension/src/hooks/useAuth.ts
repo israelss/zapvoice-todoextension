@@ -1,47 +1,63 @@
 import { ExtensionMessage } from "@/interfaces/interfaces";
-import { useEffect, useState } from "react";
-import { useItems } from "./useItems";
+import { useCallback, useEffect, useState } from "react";
 
 export const useAuth = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [authError, setAuthError] = useState<string | null>(null);
-  const { clearItems } = useItems();
+
+  const checkAuth = useCallback(async () => {
+    const tokenKey = "access_token";
+    const emailKey = "email";
+    const authErrorKey = "authError";
+
+    const authError = (await chrome.storage.sync.get(authErrorKey))[
+      authErrorKey
+    ];
+    if (authError) {
+      setAuthError(authError);
+    }
+
+    const accessToken = (await chrome.storage.sync.get(tokenKey))[tokenKey];
+    if (accessToken) {
+      const email = (await chrome.storage.sync.get(emailKey))[emailKey];
+      setEmail(email);
+      chrome.runtime.sendMessage<ExtensionMessage>({
+        type: "GET_ITEMS_REQUEST",
+        payload: null,
+      });
+      setIsAuthorized(true);
+    }
+  }, []);
 
   useEffect(() => {
-    (async () => {
-      const tokenKey = "access_token";
-      const emailKey = "email";
-      const accessToken = (await chrome.storage.sync.get(tokenKey))[tokenKey];
-      if (accessToken) {
-        setIsAuthorized(true);
-        const email = (await chrome.storage.sync.get(emailKey))[emailKey];
-        setEmail(email);
-        chrome.runtime.sendMessage<ExtensionMessage>({
-          type: "GET_ITEMS_REQUEST",
-          payload: null,
-        });
-      }
-    })();
-  }, []);
+    checkAuth();
+  }, [checkAuth]);
 
   useEffect(() => {
     const onStorageChanged = (changes: {
       [key: string]: chrome.storage.StorageChange;
     }) => {
-      if (changes.access_token && changes.email) {
-        const accessToken = changes.access_token.newValue;
-        setIsAuthorized(Boolean(accessToken));
+      if (changes.access_token?.newValue && changes.email?.newValue) {
         const email = changes.email.newValue;
-        if (email) {
-          setEmail(email);
-          chrome.runtime.sendMessage<ExtensionMessage>({
-            type: "GET_ITEMS_REQUEST",
-            payload: null,
-          });
-        } else {
-          clearItems();
-        }
+        setIsAuthorized(true);
+        setEmail(email);
+        chrome.runtime.sendMessage<ExtensionMessage>({
+          type: "GET_ITEMS_REQUEST",
+          payload: null,
+        });
+      } else if (changes.access_token?.oldValue && changes.email?.oldValue) {
+        setIsAuthorized(false);
+        setEmail("");
+        chrome.runtime.sendMessage<ExtensionMessage>({
+          type: "CLEAR_ITEMS_REQUEST",
+          payload: null,
+        });
+      }
+      if (changes.authError?.newValue) {
+        setAuthError(changes.authError.newValue);
+      } else {
+        setAuthError(null);
       }
     };
 
@@ -50,11 +66,15 @@ export const useAuth = () => {
     return () => {
       chrome.storage.sync.onChanged.removeListener(onStorageChanged);
     };
-  }, [clearItems]);
+  }, []);
 
   const logout = () => {
     chrome.storage.sync.clear();
   };
 
-  return { email, isAuthorized, logout, authError };
+  const clearAuthErrors = () => {
+    chrome.storage.sync.remove("authError");
+  };
+
+  return { email, isAuthorized, logout, authError, clearAuthErrors };
 };

@@ -1,3 +1,6 @@
+import { ApiErrorMessage, ApiSuccessData } from "@/interfaces/interfaces";
+import { ApiError } from "./error";
+
 export const makeJsonBody = (data: Record<string, unknown>): RequestInit => {
   const body = JSON.stringify(data);
   const headers: HeadersInit = { "Content-Type": "application/json" };
@@ -5,7 +8,10 @@ export const makeJsonBody = (data: Record<string, unknown>): RequestInit => {
   return { body, headers };
 };
 
-async function tryFetch(url: string, requestInit: RequestInit) {
+async function tryFetch<T>(
+  url: string,
+  requestInit: RequestInit
+): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   const access_token = (await chrome.storage.sync.get("access_token"))[
     "access_token"
   ];
@@ -18,25 +24,33 @@ async function tryFetch(url: string, requestInit: RequestInit) {
   };
   try {
     const response = await fetch(url, options);
-    return await response.json();
+    const data = await response.json();
+    if (response.ok) {
+      return {
+        data,
+        ok: true,
+      };
+    }
+    throw new ApiError(data);
   } catch (error) {
-    console.error(error);
-    return null;
+    if (error instanceof ApiError) {
+      return { message: error.message, ok: false };
+    }
+    return { message: "Erro desconhecido", ok: false };
   }
 }
 
 export async function sendPost<T>(
   url: string,
   data: Record<string, unknown>
-): Promise<T | null> {
-  const requestInit: RequestInit = { method: "POST", ...makeJsonBody(data) };
-  return await tryFetch(url, requestInit);
+): Promise<ApiSuccessData<T> | ApiErrorMessage> {
+  return await tryFetch<T>(url, { method: "POST", ...makeJsonBody(data) });
 }
 
 export async function sendPatch<T>(
   url: string,
   data?: Record<string, unknown>
-): Promise<T | null> {
+): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   let requestInit: RequestInit = { method: "PATCH" };
   if (data !== undefined) {
     requestInit = {
@@ -47,12 +61,14 @@ export async function sendPatch<T>(
   return await tryFetch(url, requestInit);
 }
 
-export async function sendDelete<T>(url: string): Promise<T | null> {
-  const requestInit: RequestInit = { method: "DELETE" };
-  return await tryFetch(url, requestInit);
+export async function sendDelete<T>(
+  url: string
+): Promise<ApiSuccessData<T> | ApiErrorMessage> {
+  return await tryFetch(url, { method: "DELETE" });
 }
 
-export async function sendGet<T>(url: string): Promise<T | null> {
-  const requestInit: RequestInit = { method: "GET" };
-  return await tryFetch(url, requestInit);
+export async function sendGet<T>(
+  url: string
+): Promise<ApiSuccessData<T> | ApiErrorMessage> {
+  return await tryFetch(url, { method: "GET" });
 }

@@ -1,14 +1,23 @@
 import { ExtensionMessage, Item } from "@/interfaces/interfaces";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useItems = () => {
   const [items, setItems] = useState<Item[]>([]);
+  const [itemsError, setItemsError] = useState<string | null>(null);
 
   useEffect(() => {
     const onMessage = ({ type, payload }: ExtensionMessage) => {
       switch (type) {
         case "GET_ITEMS_RESPONSE": {
-          setItems(payload);
+          if (payload.ok) {
+            setItems(payload.data);
+          } else {
+            setItemsError(payload.message);
+          }
+          break;
+        }
+        case "CLEAR_ITEMS_REQUEST": {
+          setItems([]);
           break;
         }
       }
@@ -28,10 +37,6 @@ export const useItems = () => {
     });
   };
 
-  const clearItems = useCallback(() => {
-    setItems([]);
-  }, []);
-
   const markItemAsComplete = (itemId: string) => {
     chrome.runtime.sendMessage<ExtensionMessage>({
       type: "COMPLETE_ITEM_REQUEST",
@@ -46,5 +51,11 @@ export const useItems = () => {
     });
   };
 
-  return { items, addItem, clearItems, markItemAsComplete, removeItem };
+  return {
+    items,
+    addItem,
+    markItemAsComplete,
+    removeItem,
+    itemsError,
+  };
 };

@@ -1,6 +1,18 @@
+import { Api } from "@/api/Api";
 import { ExtensionMessage } from "@/interfaces/interfaces";
+import { getToken, setBadge } from "@/lib/utils";
 import { login, register } from "./auth";
 import { completeItem, createItem, getItems, removeItem } from "./items";
+
+chrome.runtime.onInstalled.addListener(async () => {
+  const accessToken = await getToken();
+  if (accessToken !== undefined) {
+    const data = await Api.items.getAll();
+    if (data.ok) {
+      setBadge(data.data.filter((item) => !item.completed).length);
+    }
+  }
+});
 
 chrome.runtime.onMessage.addListener(
   async ({ type, payload }: ExtensionMessage) => {

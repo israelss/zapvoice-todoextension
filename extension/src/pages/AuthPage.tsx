@@ -5,32 +5,19 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 
 export const AuthPage = () => {
   const { clearAuthErrors } = useAuth();
 
   return (
     <Tabs defaultValue="login" onValueChange={clearAuthErrors}>
-      <TabsList className="grid items-center justify-center w-full grid-cols-2 p-1 rounded-lg h-9 bg-muted text-muted-foreground">
-        <TabsTrigger
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
-          value="login"
-        >
-          Login
-        </TabsTrigger>
-        <TabsTrigger
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
-          value="register"
-        >
-          Cadastro
-        </TabsTrigger>
+      <TabsList className="grid grid-cols-2">
+        <TabsTrigger value="login">Login</TabsTrigger>
+        <TabsTrigger value="register">Cadastro</TabsTrigger>
       </TabsList>
-      <TabsContent
-        className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        value="login"
-      >
+      <TabsContent value="login">
         <Card>
           <CardHeader>
             <CardDescription>
@@ -39,15 +26,12 @@ export const AuthPage = () => {
               <span>&nbsp;</span>
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent>
             <AuthForm formType={"login"} />
           </CardContent>
         </Card>
       </TabsContent>
-      <TabsContent
-        className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        value="register"
-      >
+      <TabsContent value="register">
         <Card>
           <CardHeader>
             <CardDescription>
@@ -58,7 +42,7 @@ export const AuthPage = () => {
               </span>
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent>
             <AuthForm formType={"register"} />
           </CardContent>
         </Card>

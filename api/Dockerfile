@@ -6,4 +6,4 @@ WORKDIR /home/node/app
 
 USER node
 
-CMD [ "npm", "run", "start:dev" ]
+CMD [ "tail", "-f", "/dev/null" ]

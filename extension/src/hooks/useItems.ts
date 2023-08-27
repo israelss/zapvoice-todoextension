@@ -1,4 +1,5 @@
 import { ExtensionMessage, Item } from "@/interfaces/interfaces";
+import { setBadge } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export const useItems = () => {
@@ -10,6 +11,9 @@ export const useItems = () => {
       switch (type) {
         case "GET_ITEMS_RESPONSE": {
           if (payload.ok) {
+            const count = payload.data.filter((item) => !item.completed).length;
+
+            setBadge(count);
             setItems(payload.data);
           } else {
             setItemsError(payload.message);

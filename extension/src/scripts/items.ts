@@ -7,6 +7,7 @@ import {
   Item,
   ItemIdPayload,
 } from "@/interfaces/interfaces";
+import { setBadge } from "../lib/utils";
 
 export const getItems = async () => {
   const data = await Api.items.getAll();
@@ -47,6 +48,7 @@ function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
       payload: data,
     });
     chrome.storage.sync.remove("itemsError");
+    setBadge(data.data.filter((item) => !item.completed).length);
   } else {
     chrome.storage.sync.set({ itemsError: data.message });
   }

@@ -1,5 +1,6 @@
 import type { ApiError, ApiErrorMessage, ApiSuccessData } from "./api";
 import type { AuthRequestPayload, AuthResponseData } from "./auth";
+import type { BadgeColors, BadgeCountColors } from "./badge";
 import type {
   CreateItemRequestPayload,
   GetItemsResponseData,
@@ -14,6 +15,8 @@ export type {
   ApiSuccessData,
   AuthRequestPayload,
   AuthResponseData,
+  BadgeColors,
+  BadgeCountColors,
   CreateItemRequestPayload,
   ExtensionMessage,
   GetItemsResponseData,

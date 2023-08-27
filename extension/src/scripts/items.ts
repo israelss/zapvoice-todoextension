@@ -6,8 +6,8 @@ import {
   ExtensionMessage,
   Item,
   ItemIdPayload,
-} from "@/interfaces/interfaces";
-import { setBadge } from "../lib/utils";
+} from "@/interfaces";
+import { setBadge, storage } from "@/lib/utils";
 
 export const getItems = async () => {
   const data = await Api.items.getAll();
@@ -19,7 +19,7 @@ export const createItem = async (payload: CreateItemRequestPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    chrome.storage.sync.set({ itemsError: data.message });
+    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
   }
 };
 
@@ -28,7 +28,7 @@ export const completeItem = async (payload: ItemIdPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    chrome.storage.sync.set({ itemsError: data.message });
+    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
   }
 };
 
@@ -37,7 +37,7 @@ export const removeItem = async (payload: ItemIdPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    chrome.storage.sync.set({ itemsError: data.message });
+    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
   }
 };
 
@@ -47,9 +47,9 @@ function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
       type: "GET_ITEMS_RESPONSE",
       payload: data,
     });
-    chrome.storage.sync.remove("itemsError");
+    storage.remove(import.meta.env.VITE_ITEMS_ERROR_KEY);
     setBadge(data.data.filter((item) => !item.completed).length);
   } else {
-    chrome.storage.sync.set({ itemsError: data.message });
+    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
   }
 }

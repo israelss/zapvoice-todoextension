@@ -1,7 +1,7 @@
 "use client";
 
 import { useItems } from "@/hooks/useItems";
-import { Item } from "@/interfaces/interfaces";
+import { Item } from "@/interfaces";
 import { cn } from "@/lib/utils";
 import { Trash2Icon } from "lucide-react";
 import { Badge } from "./ui/badge";

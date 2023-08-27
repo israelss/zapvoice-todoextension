@@ -15,7 +15,7 @@ export class RegisterDto {
     },
     {
       message:
-        'A senha precisa ter 8 dígitos com pelo menos 1 número e 1 símbolo',
+        'A senha precisa ter no mínimo 8 dígitos com pelo menos 1 número e 1 símbolo',
     },
   )
   password: string;

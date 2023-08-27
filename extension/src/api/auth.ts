@@ -3,7 +3,7 @@ import {
   ApiSuccessData,
   AuthRequestPayload,
   AuthResponseData,
-} from "@/interfaces/interfaces";
+} from "@/interfaces";
 import { sendPost } from "./utils";
 
 export const authApi = (apiBaseUrl: string) => ({

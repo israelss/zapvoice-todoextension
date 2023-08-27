@@ -4,7 +4,7 @@ import {
   CreateItemRequestPayload,
   Item,
   ItemIdPayload,
-} from "@/interfaces/interfaces";
+} from "@/interfaces";
 import { sendDelete, sendGet, sendPatch, sendPost } from "./utils";
 
 export const itemsApi = (apiBaseUrl: string) => ({

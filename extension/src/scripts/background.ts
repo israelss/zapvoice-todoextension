@@ -1,11 +1,11 @@
 import { Api } from "@/api/Api";
-import { ExtensionMessage } from "@/interfaces/interfaces";
-import { getToken, setBadge } from "@/lib/utils";
+import { ExtensionMessage } from "@/interfaces";
+import { setBadge, storage } from "@/lib/utils";
 import { login, register } from "./auth";
 import { completeItem, createItem, getItems, removeItem } from "./items";
 
 chrome.runtime.onInstalled.addListener(async () => {
-  const accessToken = await getToken();
+  const accessToken = await storage.getToken();
   if (accessToken !== undefined) {
     const data = await Api.items.getAll();
     if (data.ok) {

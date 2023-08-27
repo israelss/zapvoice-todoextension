@@ -1,25 +1,46 @@
 import { useToast } from "@/components/ui/use-toast";
-import { ExtensionMessage } from "@/interfaces/interfaces";
+import { ExtensionMessage, StorageChanges } from "@/interfaces";
+import { setBadge, storage } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
-import { getEmail, getToken, setBadge } from "../lib/utils";
 
 export const useAuth = () => {
-  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [toastId, setToastId] = useState<string | null>(null);
   const { toast, dismiss } = useToast();
 
+  const [email, setEmail] = useState<string>("");
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+  const [toastId, setToastId] = useState<string | null>(null);
+
   const showErrorToast = useCallback(
-    (message: string) => {
-      const { id } = toast({
+    (message: string) =>
+      toast({
         variant: "destructive",
         title: "Erro",
         description: message,
-      });
-      setToastId(id);
-    },
+      }),
     [toast]
   );
+
+  function clearAuthErrors() {
+    storage.remove(import.meta.env.VITE_AUTH_ERROR_KEY);
+  }
+
+  async function checkAuth() {
+    const accessToken = await storage.getToken();
+    const email = await storage.getEmail();
+    if (accessToken !== undefined && email !== undefined) {
+      setEmail(email);
+      chrome.runtime.sendMessage<ExtensionMessage>({
+        type: "GET_ITEMS_REQUEST",
+        payload: null,
+      });
+      setIsAuthorized(true);
+    }
+  }
+
+  function logout() {
+    storage.clear();
+    setBadge(null);
+  }
 
   useEffect(() => {
     clearAuthErrors();
@@ -27,11 +48,10 @@ export const useAuth = () => {
   }, []);
 
   useEffect(() => {
-    const onStorageChanged = (changes: {
-      [key: string]: chrome.storage.StorageChange;
-    }) => {
+    const onStorageChanged = (changes: StorageChanges) => {
       if (changes.authError?.newValue !== undefined) {
-        showErrorToast(changes.authError.newValue);
+        const { id } = showErrorToast(changes.authError.newValue);
+        setToastId(id);
         return;
       } else {
         if (toastId !== null) {
@@ -60,34 +80,12 @@ export const useAuth = () => {
       }
     };
 
-    chrome.storage.sync.onChanged.addListener(onStorageChanged);
+    storage.onChanged.addListener(onStorageChanged);
 
     return () => {
-      chrome.storage.sync.onChanged.removeListener(onStorageChanged);
+      storage.onChanged.removeListener(onStorageChanged);
     };
   }, [dismiss, showErrorToast, toastId]);
-
-  const logout = () => {
-    chrome.storage.sync.clear();
-    setBadge(null);
-  };
-
-  const clearAuthErrors = () => {
-    chrome.storage.sync.remove("authError");
-  };
-
-  const checkAuth = async () => {
-    const accessToken = await getToken();
-    const email = await getEmail();
-    if (accessToken !== undefined && email !== undefined) {
-      setEmail(email);
-      chrome.runtime.sendMessage<ExtensionMessage>({
-        type: "GET_ITEMS_REQUEST",
-        payload: null,
-      });
-      setIsAuthorized(true);
-    }
-  };
 
   return { email, isAuthorized, logout, clearAuthErrors };
 };

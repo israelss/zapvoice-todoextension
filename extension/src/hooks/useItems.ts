@@ -1,4 +1,4 @@
-import { ExtensionMessage, Item } from "@/interfaces/interfaces";
+import { ExtensionMessage, Item } from "@/interfaces";
 import { setBadge } from "@/lib/utils";
 import { useEffect, useState } from "react";
 

@@ -1,4 +1,5 @@
-import { ApiErrorMessage, ApiSuccessData } from "@/interfaces/interfaces";
+import { ApiErrorMessage, ApiSuccessData } from "@/interfaces";
+import { storage } from "@/lib/utils";
 import { ApiError } from "./error";
 
 export const makeJsonBody = (data: Record<string, unknown>): RequestInit => {
@@ -12,9 +13,7 @@ async function tryFetch<T>(
   url: string,
   requestInit: RequestInit
 ): Promise<ApiSuccessData<T> | ApiErrorMessage> {
-  const access_token = (await chrome.storage.sync.get("access_token"))[
-    "access_token"
-  ];
+  const access_token = await storage.getToken();
   const options = {
     ...requestInit,
     headers: {

@@ -1,5 +1,5 @@
 import { useItems } from "@/hooks/useItems";
-import { Item } from "@/interfaces/interfaces";
+import { Item } from "@/interfaces";
 import { useEffect, useState } from "react";
 import { EmptyTodoList } from "./EmptyTodoList";
 import { TodoItem } from "./TodoItem";

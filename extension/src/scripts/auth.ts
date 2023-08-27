@@ -1,6 +1,7 @@
 import { Api } from "@/api/Api";
 import { ApiErrorMessage, ApiSuccessData } from "@/interfaces/api";
 import { AuthRequestPayload, AuthResponseData } from "@/interfaces/auth";
+import { storage } from "@/lib/utils";
 
 export const login = async (payload: AuthRequestPayload) => {
   const data = await Api.auth.login(payload);
@@ -15,11 +16,14 @@ export const register = async (payload: AuthRequestPayload) => {
 async function processData(
   data: ApiSuccessData<AuthResponseData> | ApiErrorMessage
 ) {
+  await storage.remove(import.meta.env.VITE_AUTH_ERROR_KEY);
   if (data.ok) {
     const { access_token, email } = data.data;
-    chrome.storage.sync.set({ access_token, email });
-    chrome.storage.sync.remove("authError");
+    storage.setItems({
+      [import.meta.env.VITE_TOKEN_KEY]: access_token,
+      [import.meta.env.VITE_EMAIL_KEY]: email,
+    });
   } else {
-    chrome.storage.sync.set({ authError: data.message });
+    storage.setItems({ [import.meta.env.VITE_AUTH_ERROR_KEY]: data.message });
   }
 }

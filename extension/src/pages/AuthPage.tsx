@@ -3,14 +3,14 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
-import { useAuth } from "../hooks/useAuth";
 
 export const AuthPage = () => {
-  const { authError, clearAuthErrors } = useAuth();
+  const { clearAuthErrors } = useAuth();
+
   return (
     <Tabs defaultValue="login" onValueChange={clearAuthErrors}>
       <TabsList className="grid items-center justify-center w-full grid-cols-2 p-1 rounded-lg h-9 bg-muted text-muted-foreground">
@@ -34,17 +34,14 @@ export const AuthPage = () => {
         <Card>
           <CardHeader>
             <CardDescription>
-              Insira seu email e senha para ver suas tarefas.
+              <span>Insira seu email e senha para ver suas tarefas</span>.
+              <br />
+              <span>&nbsp;</span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <AuthForm formType={"login"} />
           </CardContent>
-          <CardFooter>
-            <p className="w-full text-base text-center text-destructive">
-              {authError}
-            </p>
-          </CardFooter>
         </Card>
       </TabsContent>
       <TabsContent
@@ -64,11 +61,6 @@ export const AuthPage = () => {
           <CardContent className="space-y-2">
             <AuthForm formType={"register"} />
           </CardContent>
-          <CardFooter>
-            <p className="w-full text-base text-center text-destructive">
-              {authError}
-            </p>
-          </CardFooter>
         </Card>
       </TabsContent>
     </Tabs>

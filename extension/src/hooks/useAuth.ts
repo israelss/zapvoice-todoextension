@@ -1,38 +1,41 @@
+import { useToast } from "@/components/ui/use-toast";
 import { ExtensionMessage } from "@/interfaces/interfaces";
 import { useCallback, useEffect, useState } from "react";
 
 export const useAuth = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
-  const [authError, setAuthError] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const checkAuth = useCallback(async () => {
-    const tokenKey = "access_token";
-    const emailKey = "email";
-    const authErrorKey = "authError";
-
-    const authError = (await chrome.storage.sync.get(authErrorKey))[
-      authErrorKey
-    ];
-    if (authError) {
-      setAuthError(authError);
-    }
-
-    const accessToken = (await chrome.storage.sync.get(tokenKey))[tokenKey];
-    if (accessToken) {
-      const email = (await chrome.storage.sync.get(emailKey))[emailKey];
-      setEmail(email);
-      chrome.runtime.sendMessage<ExtensionMessage>({
-        type: "GET_ITEMS_REQUEST",
-        payload: null,
-      });
-      setIsAuthorized(true);
-    }
-  }, []);
+  const showErrorToast = useCallback(
+    (message: string) =>
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: message,
+      }),
+    [toast]
+  );
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const tokenKey = "access_token";
+      const emailKey = "email";
+      const accessToken = (await chrome.storage.sync.get(tokenKey))[tokenKey];
+      if (accessToken) {
+        const email = (await chrome.storage.sync.get(emailKey))[emailKey];
+        setEmail(email);
+        chrome.runtime.sendMessage<ExtensionMessage>({
+          type: "GET_ITEMS_REQUEST",
+          payload: null,
+        });
+        setIsAuthorized(true);
+      }
+    };
+
+    clearAuthErrors();
     checkAuth();
-  }, [checkAuth]);
+  }, []);
 
   useEffect(() => {
     const onStorageChanged = (changes: {
@@ -55,9 +58,8 @@ export const useAuth = () => {
         });
       }
       if (changes.authError?.newValue) {
-        setAuthError(changes.authError.newValue);
-      } else {
-        setAuthError(null);
+        showErrorToast(changes.authError.newValue);
+        clearAuthErrors();
       }
     };
 
@@ -66,7 +68,7 @@ export const useAuth = () => {
     return () => {
       chrome.storage.sync.onChanged.removeListener(onStorageChanged);
     };
-  }, []);
+  }, [showErrorToast]);
 
   const logout = () => {
     chrome.storage.sync.clear();
@@ -76,5 +78,5 @@ export const useAuth = () => {
     chrome.storage.sync.remove("authError");
   };
 
-  return { email, isAuthorized, logout, authError, clearAuthErrors };
+  return { email, isAuthorized, logout, clearAuthErrors };
 };

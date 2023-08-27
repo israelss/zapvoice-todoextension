@@ -11,7 +11,8 @@ services:
     volumes:
       - ./api:/home/node/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: bitnami/mysql:latest

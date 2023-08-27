@@ -11,7 +11,7 @@ export const makeJsonBody = (data: Record<string, unknown>): RequestInit => {
 
 async function tryFetch<T>(
   url: string,
-  requestInit: RequestInit
+  requestInit: RequestInit,
 ): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   const access_token = await storage.getToken();
   const options = {
@@ -41,14 +41,14 @@ async function tryFetch<T>(
 
 export async function sendPost<T>(
   url: string,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
 ): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   return await tryFetch<T>(url, { method: "POST", ...makeJsonBody(data) });
 }
 
 export async function sendPatch<T>(
   url: string,
-  data?: Record<string, unknown>
+  data?: Record<string, unknown>,
 ): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   let requestInit: RequestInit = { method: "PATCH" };
   if (data !== undefined) {
@@ -61,13 +61,13 @@ export async function sendPatch<T>(
 }
 
 export async function sendDelete<T>(
-  url: string
+  url: string,
 ): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   return await tryFetch(url, { method: "DELETE" });
 }
 
 export async function sendGet<T>(
-  url: string
+  url: string,
 ): Promise<ApiSuccessData<T> | ApiErrorMessage> {
   return await tryFetch(url, { method: "GET" });
 }

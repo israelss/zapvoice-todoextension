@@ -17,7 +17,7 @@ export const useAuth = () => {
         title: "Erro",
         description: message,
       }),
-    [toast]
+    [toast],
   );
 
   function clearAuthErrors() {

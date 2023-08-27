@@ -14,7 +14,7 @@ export const register = async (payload: AuthRequestPayload) => {
 };
 
 async function processData(
-  data: ApiSuccessData<AuthResponseData> | ApiErrorMessage
+  data: ApiSuccessData<AuthResponseData> | ApiErrorMessage,
 ) {
   await storage.remove(import.meta.env.VITE_AUTH_ERROR_KEY);
   if (data.ok) {

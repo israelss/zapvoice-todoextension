@@ -42,5 +42,5 @@ chrome.runtime.onMessage.addListener(
         break;
       }
     }
-  }
+  },
 );

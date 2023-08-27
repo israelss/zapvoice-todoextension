@@ -15,7 +15,7 @@ export const TodoItem = ({ item }: { item: Item }) => {
         <p
           className={cn(
             item.completed && "line-through",
-            "font-semibold break-words"
+            "font-semibold break-words",
           )}
         >
           {item.content}

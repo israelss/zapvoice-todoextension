@@ -1,6 +1,5 @@
 import { TodoItem } from "@/components/TodoItem";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -9,16 +8,17 @@ import { useAuth } from "@/hooks/useAuth";
 import { useItems } from "@/hooks/useItems";
 import { Item } from "@/interfaces/interfaces";
 import { LaughIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { NewTodoForm } from "../components/NewTodoForm";
 
 export const ItemsPage = () => {
-  const newTodoInputRef = useRef<HTMLInputElement>(null);
+  // const newTodoInputRef = useRef<HTMLInputElement>(null);
 
-  const [addButtonDisabled, setAddButtonDisabled] = useState<boolean>(true);
+  // const [addButtonDisabled, setAddButtonDisabled] = useState<boolean>(true);
   const [filteredItems, setFilteredItems] = useState<Item[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
 
-  const { items, addItem } = useItems();
+  const { items } = useItems();
   const { email, logout } = useAuth();
 
   useEffect(() => {
@@ -41,7 +41,8 @@ export const ItemsPage = () => {
         />
         <Label htmlFor="show-completed">Mostrar tarefas completas</Label>
       </div>
-      <div className="flex items-center w-full max-w-sm space-x-2">
+      <NewTodoForm />
+      {/* <div className="flex items-center w-full max-w-sm space-x-2">
         <Button
           size={"sm"}
           onClick={() => {
@@ -64,7 +65,7 @@ export const ItemsPage = () => {
           ref={newTodoInputRef}
           placeholder="Nova tarefa"
         />
-      </div>
+      </div> */}
 
       <ScrollArea className="mt-2 h-[300px] rounded-md border p-4 ">
         {filteredItems.length === 0 ? (

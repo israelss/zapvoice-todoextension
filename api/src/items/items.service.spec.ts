@@ -37,7 +37,6 @@ describe('ItemsService', () => {
   describe('create', () => {
     const inputMockData: CreateItemDto = {
       content: 'test content',
-      title: 'test title',
     };
 
     const userIdMock: string = '1';

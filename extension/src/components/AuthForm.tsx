@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ExtensionMessage } from "@/interfaces";
+import { runtime } from "@/lib/utils";
 import { authSchema } from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -27,14 +27,13 @@ export const AuthForm = ({ formType }: { formType: "login" | "register" }) => {
   });
 
   function onSubmit(values: z.infer<typeof authSchema>) {
-    const payload: ExtensionMessage = {
+    runtime.sendMessage({
       type: values.type === "login" ? "LOGIN_REQUEST" : "REGISTER_REQUEST",
       payload: {
         email: values.email,
         password: values.password,
       },
-    };
-    chrome.runtime.sendMessage<ExtensionMessage>(payload);
+    });
   }
 
   return (

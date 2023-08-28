@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
-import { ExtensionMessage, StorageChanges } from "@/interfaces";
-import { setBadge, storage } from "@/lib/utils";
+import { StorageChangesCallback } from "@/interfaces";
+import { runtime, setBadge, storage } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 
 export const useAuth = () => {
@@ -29,7 +29,7 @@ export const useAuth = () => {
     const email = await storage.getEmail();
     if (accessToken !== undefined && email !== undefined) {
       setEmail(email);
-      chrome.runtime.sendMessage<ExtensionMessage>({
+      runtime.sendMessage({
         type: "GET_ITEMS_REQUEST",
         payload: null,
       });
@@ -48,7 +48,7 @@ export const useAuth = () => {
   }, []);
 
   useEffect(() => {
-    const onStorageChanged = (changes: StorageChanges) => {
+    const onStorageChanged: StorageChangesCallback = (changes) => {
       if (changes.authError?.newValue !== undefined) {
         const { id } = showErrorToast(changes.authError.newValue);
         setToastId(id);
@@ -66,14 +66,14 @@ export const useAuth = () => {
         const email = changes.email.newValue;
         setIsAuthorized(true);
         setEmail(email);
-        chrome.runtime.sendMessage<ExtensionMessage>({
+        runtime.sendMessage({
           type: "GET_ITEMS_REQUEST",
           payload: null,
         });
       } else {
         setIsAuthorized(false);
         setEmail("");
-        chrome.runtime.sendMessage<ExtensionMessage>({
+        runtime.sendMessage({
           type: "CLEAR_ITEMS_REQUEST",
           payload: null,
         });

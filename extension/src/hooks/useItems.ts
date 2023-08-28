@@ -1,5 +1,5 @@
-import { ExtensionMessage, Item } from "@/interfaces";
-import { setBadge } from "@/lib/utils";
+import { Item, OnMessageListenerCallback } from "@/interfaces";
+import { runtime, setBadge } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export const useItems = () => {
@@ -7,7 +7,7 @@ export const useItems = () => {
   const [itemsError, setItemsError] = useState<string | null>(null);
 
   useEffect(() => {
-    const onMessage = ({ type, payload }: ExtensionMessage) => {
+    const onMessage: OnMessageListenerCallback = ({ type, payload }) => {
       switch (type) {
         case "GET_ITEMS_RESPONSE": {
           if (payload.ok) {
@@ -27,29 +27,29 @@ export const useItems = () => {
       }
     };
 
-    chrome.runtime.onMessage.addListener(onMessage);
+    runtime.onMessage.addListener(onMessage);
 
     return () => {
-      chrome.runtime.onMessage.removeListener(onMessage);
+      runtime.onMessage.removeListener(onMessage);
     };
   }, []);
 
   const addItem = (content: string) => {
-    chrome.runtime.sendMessage<ExtensionMessage>({
+    runtime.sendMessage({
       type: "CREATE_ITEM_REQUEST",
       payload: { content },
     });
   };
 
   const markItemAsComplete = (itemId: string) => {
-    chrome.runtime.sendMessage<ExtensionMessage>({
+    runtime.sendMessage({
       type: "COMPLETE_ITEM_REQUEST",
       payload: { id: itemId },
     });
   };
 
   const removeItem = (itemId: string) => {
-    chrome.runtime.sendMessage<ExtensionMessage>({
+    runtime.sendMessage({
       type: "REMOVE_ITEM_REQUEST",
       payload: { id: itemId },
     });

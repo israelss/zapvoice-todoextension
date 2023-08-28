@@ -3,11 +3,10 @@ import {
   ApiErrorMessage,
   ApiSuccessData,
   CreateItemRequestPayload,
-  ExtensionMessage,
   Item,
   ItemIdPayload,
 } from "@/interfaces";
-import { setBadge, storage } from "@/lib/utils";
+import { runtime, setBadge, storage } from "@/lib/utils";
 
 export const getItems = async () => {
   const data = await Api.items.getAll();
@@ -43,7 +42,7 @@ export const removeItem = async (payload: ItemIdPayload) => {
 
 function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
   if (data.ok) {
-    chrome.runtime.sendMessage<ExtensionMessage>({
+    runtime.sendMessage({
       type: "GET_ITEMS_RESPONSE",
       payload: data,
     });

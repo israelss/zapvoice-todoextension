@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import type { ManifestV3Export } from "@crxjs/vite-plugin";
 import { crx } from "@crxjs/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
@@ -16,5 +17,11 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  test: {
+    environment: "happy-dom",
+    unstubGlobals: true,
+    unstubEnvs: true,
+    setupFiles: "src/tests/setup.ts",
   },
 });

@@ -15,7 +15,7 @@ export const TodoItemList = ({ showCompleted }: { showCompleted: boolean }) => {
   }, [items, showCompleted]);
 
   return (
-    <ScrollArea className="mt-2 h-[300px] rounded-md border p-4 ">
+    <ScrollArea className="mt-2 h-[266px] rounded-md border p-4 ">
       {filteredItems.length === 0 ? (
         <EmptyTodoList />
       ) : (

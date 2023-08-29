@@ -32,7 +32,17 @@ async function tryFetch<T>(
     }
     throw new ApiError(data);
   } catch (error) {
+    console.log({ error });
     if (error instanceof ApiError) {
+      return { message: error.message, ok: false };
+    }
+    if (error instanceof TypeError) {
+      if (error.message === "Failed to fetch") {
+        return {
+          message: "Erro de rede. Tente novamente mais tarde",
+          ok: false,
+        };
+      }
       return { message: error.message, ok: false };
     }
     return { message: "Erro desconhecido", ok: false };

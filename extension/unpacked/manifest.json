@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ZapVoice Todo Extension",
+  "version": "0.0.1",
+  "description": "Uma lista de tarefas simples. Extensão criada para o teste técnico da ZapVoice",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  }
+}

@@ -241,6 +241,8 @@ npm run start:dev
 
 ### Frontend (extensão do Chrome)
 
+#### Modo de desenvolvimento
+
 No terminal com o _container_ da extensão inicie o servidor de desenvolvimento:
 
 ```bash
@@ -263,6 +265,37 @@ Agora com a extensão carregada e fixada é possível utilizar a mesma clicando 
 ![Captura de tela mostrando o botão da extensão fixada](./docs/images/extension_fixed.png)
 
 ![Captura de tela mostrando a tela de login da extensão](./docs/images/extension_login.png)
+
+#### Modo de produção
+
+
+_⚠️ Escolha a alternativa **A** ou **B** ⚠️_
+
+**A)** No terminal com o _container_ da extensão realize o build da extensão:
+
+```bash
+npm run build -- --outDir unpacked
+```
+
+**B)** Utilize o diretório `unpacked`, que foi clonado junto com o projeto (`[caminho_onde_o_projeto_foi_clonado]/extension/unpacked`) nas instruções abaixo
+
+Abra o chrome e carregue a extensão sem compactação de acordo com as instruções abaixo (instruções atualizadas e completas [disponíveis aqui](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#load-unpacked)):
+
+1. Vá para a página de extensões inserindo `chrome://extensions` em uma nova aba.
+2. Habilite o Modo do desenvolvedor clicando no _toggle switch_ ao lado do texto **Modo do desenvolvedor**.
+3. Clique no botão **Carregar sem compactação** e selecione o diretório da extensão (`[caminho_onde_o_projeto_foi_clonado]/extension/unpacked`)
+
+Fixe a extensão de acordo com as instruções abaixo (instruções atualizadas e completas [disponíveis aqui](https://developer.chrome.com/docs/extensions/mv3/getstarted/development-basics/#pin)):
+
+1. Clique no ícone do menu de extensões (a pequena peça de quebra-cabeças)
+2. Fixe a extensão clicando no botão fixar ( um pequeno _pin_ a lado do nome da extensão)
+
+Agora com a extensão carregada e fixada é possível utilizar a mesma clicando no ícone da extensão. 🎉
+
+![Captura de tela mostrando o botão da extensão fixada](./docs/images/extension_fixed.png)
+
+![Captura de tela mostrando a tela de login da extensão](./docs/images/extension_login.png)
+
 # 🧪 Testando o projeto
 
 ## 1️⃣ Testes unitários

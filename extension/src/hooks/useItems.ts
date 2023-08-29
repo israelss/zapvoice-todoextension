@@ -1,6 +1,6 @@
 import { Item, OnMessageListenerCallback } from "@/interfaces";
 import { runtime, setBadge, storage } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useItems = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -19,10 +19,6 @@ export const useItems = () => {
           }
           break;
         }
-        case "CLEAR_ITEMS_REQUEST": {
-          setItems([]);
-          break;
-        }
       }
     };
 
@@ -32,6 +28,17 @@ export const useItems = () => {
       runtime.onMessage.removeListener(onMessage);
     };
   }, []);
+
+  const getItems = useCallback(() => {
+    runtime.sendMessage({
+      type: "GET_ITEMS_REQUEST",
+      payload: null,
+    });
+  }, []);
+
+  const clearItems = () => {
+    setItems([]);
+  };
 
   const addItem = (content: string) => {
     runtime.sendMessage({
@@ -57,6 +64,8 @@ export const useItems = () => {
   return {
     items,
     addItem,
+    clearItems,
+    getItems,
     markItemAsComplete,
     removeItem,
   };

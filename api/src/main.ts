@@ -6,7 +6,7 @@ import { PrismaExceptionFilter } from './prisma/filters/prisma-exception.filter'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: 'chrome-extension://jihhflcplkkkdncpmdjnjjaohholgoaf',
+      origin: /chrome-extension:\/\/./,
       methods: ['GET', 'POST', 'PATCH', 'OPTIONS', 'DELETE'],
     },
   });

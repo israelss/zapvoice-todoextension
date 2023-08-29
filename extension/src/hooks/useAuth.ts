@@ -1,41 +1,12 @@
-import { useToast } from "@/components/ui/use-toast";
 import { StorageChangesCallback } from "@/interfaces";
-import { errorKey, runtime, setBadge, storage } from "@/lib/utils";
-import { useCallback, useEffect, useState } from "react";
+import { emailKey, errorKey, setBadge, storage, tokenKey } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { useItems } from "./useItems";
 
 export const useAuth = () => {
-  const { toast, dismiss } = useToast();
-
+  const { clearItems, getItems } = useItems();
   const [email, setEmail] = useState<string>("");
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-  const [toastId, setToastId] = useState<string | null>(null);
-
-  const showErrorToast = useCallback(
-    (message: string) =>
-      toast({
-        variant: "destructive",
-        title: "Erro",
-        description: message,
-      }),
-    [toast],
-  );
-
-  function clearAuthErrors() {
-    storage.remove(errorKey);
-  }
-
-  async function checkAuth() {
-    const accessToken = await storage.getToken();
-    const email = await storage.getEmail();
-    if (accessToken !== undefined && email !== undefined) {
-      setEmail(email);
-      runtime.sendMessage({
-        type: "GET_ITEMS_REQUEST",
-        payload: null,
-      });
-      setIsAuthorized(true);
-    }
-  }
 
   function logout() {
     storage.clear();
@@ -43,40 +14,34 @@ export const useAuth = () => {
   }
 
   useEffect(() => {
-    clearAuthErrors();
+    async function checkAuth() {
+      const [accessToken, email] = await Promise.all([
+        storage.getToken(),
+        storage.getEmail(),
+      ]);
+      if (accessToken !== undefined && email !== undefined) {
+        setEmail(email);
+        setIsAuthorized(true);
+        getItems();
+      } else {
+        setBadge(null);
+      }
+    }
+
+    storage.remove(errorKey);
     checkAuth();
-  }, []);
+  }, [getItems]);
 
   useEffect(() => {
     const onStorageChanged: StorageChangesCallback = (changes) => {
-      if (changes[errorKey]?.newValue !== undefined) {
-        const { id } = showErrorToast(changes[errorKey].newValue);
-        setToastId(id);
-        return;
-      } else {
-        if (toastId !== null) {
-          dismiss(toastId);
-        }
-        clearAuthErrors();
-      }
-      if (
-        changes.access_token?.newValue !== undefined &&
-        changes.email?.newValue !== undefined
-      ) {
-        const email = changes.email.newValue;
+      if (changes[tokenKey]?.newValue !== undefined) {
         setIsAuthorized(true);
-        setEmail(email);
-        runtime.sendMessage({
-          type: "GET_ITEMS_REQUEST",
-          payload: null,
-        });
+        setEmail(changes[emailKey]?.newValue ?? "");
+        getItems();
       } else {
         setIsAuthorized(false);
         setEmail("");
-        runtime.sendMessage({
-          type: "CLEAR_ITEMS_REQUEST",
-          payload: null,
-        });
+        clearItems();
       }
     };
 
@@ -85,7 +50,7 @@ export const useAuth = () => {
     return () => {
       storage.onChanged.removeListener(onStorageChanged);
     };
-  }, [dismiss, showErrorToast, toastId]);
+  }, [clearItems, getItems]);
 
-  return { email, isAuthorized, logout, clearAuthErrors };
+  return { email, isAuthorized, logout };
 };

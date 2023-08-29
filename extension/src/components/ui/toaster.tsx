@@ -29,7 +29,7 @@ export function Toaster() {
           </Toast>
         );
       })}
-      <ToastViewport className="bottom-0" />
+      <ToastViewport className="bottom-0 top-auto" />
     </ToastProvider>
   );
 }

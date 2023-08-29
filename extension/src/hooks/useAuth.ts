@@ -1,6 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { StorageChangesCallback } from "@/interfaces";
-import { runtime, setBadge, storage } from "@/lib/utils";
+import { errorKey, runtime, setBadge, storage } from "@/lib/utils";
 import { useCallback, useEffect, useState } from "react";
 
 export const useAuth = () => {
@@ -21,7 +21,7 @@ export const useAuth = () => {
   );
 
   function clearAuthErrors() {
-    storage.remove(import.meta.env.VITE_ERROR_KEY);
+    storage.remove(errorKey);
   }
 
   async function checkAuth() {
@@ -49,8 +49,8 @@ export const useAuth = () => {
 
   useEffect(() => {
     const onStorageChanged: StorageChangesCallback = (changes) => {
-      if (changes.authError?.newValue !== undefined) {
-        const { id } = showErrorToast(changes.authError.newValue);
+      if (changes[errorKey]?.newValue !== undefined) {
+        const { id } = showErrorToast(changes[errorKey].newValue);
         setToastId(id);
         return;
       } else {

@@ -6,7 +6,7 @@ import {
   Item,
   ItemIdPayload,
 } from "@/interfaces";
-import { runtime, setBadge, storage } from "@/lib/utils";
+import { errorKey, runtime, setBadge, storage } from "@/lib/utils";
 
 export const getItems = async () => {
   const data = await Api.items.getAll();
@@ -18,7 +18,7 @@ export const createItem = async (payload: CreateItemRequestPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
+    storage.setItems({ [errorKey]: data.message });
   }
 };
 
@@ -27,7 +27,7 @@ export const completeItem = async (payload: ItemIdPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
+    storage.setItems({ [errorKey]: data.message });
   }
 };
 
@@ -36,7 +36,7 @@ export const removeItem = async (payload: ItemIdPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
+    storage.setItems({ [errorKey]: data.message });
   }
 };
 
@@ -46,9 +46,9 @@ function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
       type: "GET_ITEMS_RESPONSE",
       payload: data,
     });
-    storage.remove(import.meta.env.VITE_ERROR_KEY);
+    storage.remove(errorKey);
     setBadge(data.data.filter((item) => !item.completed).length);
   } else {
-    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
+    storage.setItems({ [errorKey]: data.message });
   }
 }

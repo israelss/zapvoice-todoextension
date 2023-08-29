@@ -1,13 +1,14 @@
 import { StorageChangesCallback } from "@/interfaces";
+import { emailKey, tokenKey } from "./utils";
 
 const getItem = async <T>(key: string): Promise<T | undefined> => {
   return (await chrome.storage.sync.get(key))[key];
 };
 
 export const storage = {
-  getToken: async () => getItem<string>(import.meta.env.VITE_TOKEN_KEY),
+  getToken: async () => getItem<string>(tokenKey),
 
-  getEmail: async () => getItem<string>(import.meta.env.VITE_EMAIL_KEY),
+  getEmail: async () => getItem<string>(emailKey),
 
   setItems: async (items: Record<string, unknown>) => {
     return chrome.storage.sync.set(items);

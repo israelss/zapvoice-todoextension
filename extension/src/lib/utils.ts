@@ -17,3 +17,7 @@ export const formatDatetime = (date: string) => {
 export * from "./action";
 export * from "./runtime";
 export * from "./storage";
+
+export const errorKey = import.meta.env.VITE_ERROR_KEY;
+export const tokenKey = import.meta.env.VITE_TOKEN_KEY;
+export const emailKey = import.meta.env.VITE_EMAIL_KEY;

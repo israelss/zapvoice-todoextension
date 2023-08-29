@@ -48,8 +48,7 @@ export const TodoItem = ({ item }: { item: Item }) => {
             disabled={item.completed}
             onClick={() => markItemAsComplete(item.id)}
             size={"sm"}
-            variant={item.completed ? "ghost" : "default"}
-            className={"bg-emerald-500 text-emerald-100"}
+            variant={"completeTask"}
           >
             Completar
           </Button>

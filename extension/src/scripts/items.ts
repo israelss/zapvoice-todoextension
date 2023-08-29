@@ -6,7 +6,7 @@ import {
   Item,
   ItemIdPayload,
 } from "@/interfaces";
-import { errorKey, runtime, setBadge, storage } from "@/lib/utils";
+import { errorKey, runtime, storage } from "@/lib/utils";
 
 export const getItems = async () => {
   const data = await Api.items.getAll();
@@ -15,40 +15,27 @@ export const getItems = async () => {
 
 export const createItem = async (payload: CreateItemRequestPayload) => {
   const data = await Api.items.create(payload);
-  if (data.ok) {
-    getItems();
-  } else {
-    storage.setItems({ [errorKey]: data.message });
-  }
+  data.ok ? getItems() : storage.setError(data.message);
 };
 
 export const completeItem = async (payload: ItemIdPayload) => {
   const data = await Api.items.markAsComplete(payload);
-  if (data.ok) {
-    getItems();
-  } else {
-    storage.setItems({ [errorKey]: data.message });
-  }
+  data.ok ? getItems() : storage.setError(data.message);
 };
 
 export const removeItem = async (payload: ItemIdPayload) => {
   const data = await Api.items.remove(payload);
-  if (data.ok) {
-    getItems();
-  } else {
-    storage.setItems({ [errorKey]: data.message });
-  }
+  data.ok ? getItems() : storage.setError(data.message);
 };
 
-function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
+async function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
+  await storage.remove(errorKey);
   if (data.ok) {
     runtime.sendMessage({
       type: "GET_ITEMS_RESPONSE",
       payload: data,
     });
-    storage.remove(errorKey);
-    setBadge(data.data.filter((item) => !item.completed).length);
   } else {
-    storage.setItems({ [errorKey]: data.message });
+    storage.setError(data.message);
   }
 }

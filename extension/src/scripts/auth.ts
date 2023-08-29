@@ -1,7 +1,7 @@
 import { Api } from "@/api/Api";
 import { ApiErrorMessage, ApiSuccessData } from "@/interfaces/api";
 import { AuthRequestPayload, AuthResponseData } from "@/interfaces/auth";
-import { emailKey, errorKey, storage, tokenKey } from "@/lib/utils";
+import { emailKey, storage, tokenKey } from "@/lib/utils";
 
 export const login = async (payload: AuthRequestPayload) => {
   const data = await Api.auth.login(payload);
@@ -16,7 +16,7 @@ export const register = async (payload: AuthRequestPayload) => {
 async function processData(
   data: ApiSuccessData<AuthResponseData> | ApiErrorMessage,
 ) {
-  await storage.remove(errorKey);
+  await storage.clear();
   if (data.ok) {
     const { access_token, email } = data.data;
     storage.setItems({
@@ -24,6 +24,6 @@ async function processData(
       [emailKey]: email,
     });
   } else {
-    storage.setItems({ [errorKey]: data.message });
+    storage.setError(data.message);
   }
 }

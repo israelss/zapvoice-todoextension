@@ -1,8 +1,12 @@
 import { StorageChangesCallback } from "@/interfaces";
-import { emailKey, tokenKey } from "./utils";
+import { emailKey, errorKey, tokenKey } from "./utils";
 
 const getItem = async <T>(key: string): Promise<T | undefined> => {
   return (await chrome.storage.sync.get(key))[key];
+};
+
+const setItems = async (items: Record<string, unknown>) => {
+  return chrome.storage.sync.set(items);
 };
 
 export const storage = {
@@ -10,9 +14,9 @@ export const storage = {
 
   getEmail: async () => getItem<string>(emailKey),
 
-  setItems: async (items: Record<string, unknown>) => {
-    return chrome.storage.sync.set(items);
-  },
+  setItems: async (items: Record<string, unknown>) => setItems(items),
+
+  setError: async (message: string) => setItems({ [errorKey]: message }),
 
   remove: async (key: string) => chrome.storage.sync.remove(key),
 

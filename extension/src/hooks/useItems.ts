@@ -1,10 +1,9 @@
 import { Item, OnMessageListenerCallback } from "@/interfaces";
-import { runtime, setBadge } from "@/lib/utils";
+import { runtime, setBadge, storage } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export const useItems = () => {
   const [items, setItems] = useState<Item[]>([]);
-  const [itemsError, setItemsError] = useState<string | null>(null);
 
   useEffect(() => {
     const onMessage: OnMessageListenerCallback = ({ type, payload }) => {
@@ -16,7 +15,7 @@ export const useItems = () => {
             setBadge(count);
             setItems(payload.data);
           } else {
-            setItemsError(payload.message);
+            storage.setError(payload.message);
           }
           break;
         }
@@ -60,6 +59,5 @@ export const useItems = () => {
     addItem,
     markItemAsComplete,
     removeItem,
-    itemsError,
   };
 };

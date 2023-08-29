@@ -2,7 +2,7 @@
 
 import { useItems } from "@/hooks/useItems";
 import { Item } from "@/interfaces";
-import { cn } from "@/lib/utils";
+import { cn, formatDatetime } from "@/lib/utils";
 import { Trash2Icon } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -22,22 +22,12 @@ export const TodoItem = ({ item }: { item: Item }) => {
         </p>
         <div className="text-[0.6rem] grid grid-cols-2">
           <p>Adicionada:</p>
-          <p>
-            {Intl.DateTimeFormat("pt-br", {
-              dateStyle: "short",
-              timeStyle: "medium",
-            }).format(new Date(item.created_at))}
-          </p>
+          <p>{formatDatetime(item.created_at)}</p>
         </div>
         {item.completed && (
           <div className="text-[0.6rem] grid grid-cols-2">
             <p>Finalizada:</p>
-            <p>
-              {Intl.DateTimeFormat("pt-br", {
-                dateStyle: "short",
-                timeStyle: "medium",
-              }).format(new Date(item.updated_at))}
-            </p>
+            <p>{formatDatetime(item.updated_at)}</p>
           </div>
         )}
       </div>

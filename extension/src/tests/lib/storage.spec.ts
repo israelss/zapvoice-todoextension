@@ -31,18 +31,18 @@ describe("chrome storage abstractions", () => {
   describe("remove", () => {
     test("should remove an item from storage", async () => {
       await chrome.storage.sync.set({
-        [import.meta.env.VITE_AUTH_ERROR_KEY]: "testError",
+        [import.meta.env.VITE_ERROR_KEY]: "testError",
       });
       expect(
-        chrome.storage.sync.get(import.meta.env.VITE_AUTH_ERROR_KEY),
+        chrome.storage.sync.get(import.meta.env.VITE_ERROR_KEY),
       ).resolves.toStrictEqual({
-        [import.meta.env.VITE_AUTH_ERROR_KEY]: "testError",
+        [import.meta.env.VITE_ERROR_KEY]: "testError",
       });
-      await storage.remove(import.meta.env.VITE_AUTH_ERROR_KEY);
+      await storage.remove(import.meta.env.VITE_ERROR_KEY);
       expect(
-        chrome.storage.sync.get(import.meta.env.VITE_AUTH_ERROR_KEY),
+        chrome.storage.sync.get(import.meta.env.VITE_ERROR_KEY),
       ).resolves.toStrictEqual({
-        [import.meta.env.VITE_AUTH_ERROR_KEY]: undefined,
+        [import.meta.env.VITE_ERROR_KEY]: undefined,
       });
     });
   });
@@ -50,23 +50,23 @@ describe("chrome storage abstractions", () => {
   describe("clear", () => {
     test("should clear storage", async () => {
       await chrome.storage.sync.set({
-        [import.meta.env.VITE_AUTH_ERROR_KEY]: "testError",
+        [import.meta.env.VITE_ERROR_KEY]: "testError",
         [import.meta.env.VITE_TOKEN_KEY]: "testToken",
         [import.meta.env.VITE_EMAIL_KEY]: "test@email.com",
       });
       expect(
-        chrome.storage.sync.get(import.meta.env.VITE_AUTH_ERROR_KEY),
+        chrome.storage.sync.get(import.meta.env.VITE_ERROR_KEY),
       ).resolves.toStrictEqual({
-        [import.meta.env.VITE_AUTH_ERROR_KEY]: "testError",
+        [import.meta.env.VITE_ERROR_KEY]: "testError",
       });
       expect(storage.getToken()).resolves.toBe("testToken");
       expect(storage.getEmail()).resolves.toBe("test@email.com");
 
       await storage.clear();
       expect(
-        chrome.storage.sync.get(import.meta.env.VITE_AUTH_ERROR_KEY),
+        chrome.storage.sync.get(import.meta.env.VITE_ERROR_KEY),
       ).resolves.toStrictEqual({
-        [import.meta.env.VITE_AUTH_ERROR_KEY]: undefined,
+        [import.meta.env.VITE_ERROR_KEY]: undefined,
       });
       expect(storage.getToken()).resolves.toBeUndefined();
       expect(storage.getEmail()).resolves.toBeUndefined();

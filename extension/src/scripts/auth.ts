@@ -16,7 +16,7 @@ export const register = async (payload: AuthRequestPayload) => {
 async function processData(
   data: ApiSuccessData<AuthResponseData> | ApiErrorMessage,
 ) {
-  await storage.remove(import.meta.env.VITE_AUTH_ERROR_KEY);
+  await storage.remove(import.meta.env.VITE_ERROR_KEY);
   if (data.ok) {
     const { access_token, email } = data.data;
     storage.setItems({
@@ -24,6 +24,6 @@ async function processData(
       [import.meta.env.VITE_EMAIL_KEY]: email,
     });
   } else {
-    storage.setItems({ [import.meta.env.VITE_AUTH_ERROR_KEY]: data.message });
+    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
   }
 }

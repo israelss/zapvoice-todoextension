@@ -224,9 +224,8 @@ Crie o arquivo `.env` na pasta `extension` e preencha com as variáveis necessá
 IMAGE_INLINE_SIZE_LIMIT=0
 INLINE_RUNTIME_CHUNK=false
 VITE_API_BASE_URL="http://localhost:3000"
-VITE_AUTH_ERROR_KEY="authError"
 VITE_EMAIL_KEY="email"
-VITE_ITEMS_ERROR_KEY="itemsError"
+VITE_ERROR_KEY="errorMessage"
 VITE_TOKEN_KEY="access_token"
 ```
 

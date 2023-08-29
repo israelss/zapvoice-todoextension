@@ -21,7 +21,7 @@ export const useAuth = () => {
   );
 
   function clearAuthErrors() {
-    storage.remove(import.meta.env.VITE_AUTH_ERROR_KEY);
+    storage.remove(import.meta.env.VITE_ERROR_KEY);
   }
 
   async function checkAuth() {

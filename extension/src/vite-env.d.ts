@@ -2,9 +2,8 @@
 
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
-  readonly VITE_AUTH_ERROR_KEY: string;
   readonly VITE_EMAIL_KEY: string;
-  readonly VITE_ITEMS_ERROR_KEY: string;
+  readonly VITE_ERROR_KEY: string;
   readonly VITE_TOKEN_KEY: string;
 }
 

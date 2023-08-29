@@ -18,7 +18,7 @@ export const createItem = async (payload: CreateItemRequestPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
+    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
   }
 };
 
@@ -27,7 +27,7 @@ export const completeItem = async (payload: ItemIdPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
+    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
   }
 };
 
@@ -36,7 +36,7 @@ export const removeItem = async (payload: ItemIdPayload) => {
   if (data.ok) {
     getItems();
   } else {
-    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
+    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
   }
 };
 
@@ -46,9 +46,9 @@ function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
       type: "GET_ITEMS_RESPONSE",
       payload: data,
     });
-    storage.remove(import.meta.env.VITE_ITEMS_ERROR_KEY);
+    storage.remove(import.meta.env.VITE_ERROR_KEY);
     setBadge(data.data.filter((item) => !item.completed).length);
   } else {
-    storage.setItems({ [import.meta.env.VITE_ITEMS_ERROR_KEY]: data.message });
+    storage.setItems({ [import.meta.env.VITE_ERROR_KEY]: data.message });
   }
 }

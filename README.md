@@ -1,3 +1,26 @@
+# 🚏 Índice
+[🚀 Sobre este projeto](#🚀-sobre-este-projeto)
+  - [Backend](#backend-api)
+  - [Frontend](#frontend-extensão-do-chrome)
+
+[🧰 Tecnologias e ferramentas](#🧰-tecnologias-e-ferramentas)
+  - [Backend e Frontend](#para-este-projeto-foram-utilizados)
+  - [Backend](#backend-api-1)
+  - [Frontend](#frontend-extensc3a3o-do-chrome-1)
+
+[📋 Instruções](#📋-instruções)
+  - [Inicialização](#🏁-inicialização)
+  - [Backend](#backend-api-2)
+  - [Frontend](#frontend-extensc3a3o-do-chrome-2)
+
+[⚙️ Rodando o projeto](#⚙️-rodando-o-projeto)
+  - [Backend](#backend-api-3)
+  - [Frontend](#frontend-extensc3a3o-do-chrome-3)
+
+[🧪 Testando o projeto](#🧪-testando-o-projeto)
+  - [1️⃣ Testes unitários](#1️⃣-testes-unitários)
+    - [Backend](#backend-api-4)
+    - [Frontend](#frontend-extensc3a3o-do-chrome-4)
 # 🚀 Sobre este projeto
 
 Este projeto é composto por uma API REST e uma extensão do Chrome (Manifest v3), que se comunica com a API.
@@ -89,7 +112,7 @@ E se necessário é possível cadastrar novo usuário:
 
 ## 🧰 Tecnologias e ferramentas
 
-Para este projeto foram utilizados:
+### Para este projeto foram utilizados:
 
 - [Typescript](https://www.typescriptlang.org/)
 

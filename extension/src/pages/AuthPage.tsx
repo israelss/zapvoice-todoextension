@@ -6,13 +6,12 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from "@/hooks/useAuth";
+import { storage } from "@/lib/storage";
+import { errorKey } from "@/lib/utils";
 
 export const AuthPage = () => {
-  const { clearAuthErrors } = useAuth();
-
   return (
-    <Tabs defaultValue="login" onValueChange={clearAuthErrors}>
+    <Tabs defaultValue="login" onValueChange={() => storage.remove(errorKey)}>
       <TabsList className="grid grid-cols-2">
         <TabsTrigger value="login">Login</TabsTrigger>
         <TabsTrigger value="register">Cadastro</TabsTrigger>

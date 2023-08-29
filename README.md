@@ -173,7 +173,36 @@ git clone git@github.com:israelss/zapvoice-todoextension.git
 
 ## 🏁 Inicialização
 
-Após clonar o projeto, suba os _containers_ com o docker compose:
+Após clonar o projeto, crie e preencha os arquivos `.env` necessários.
+
+Crie o arquivo `.env.db` no diretório `db`, e preencha com as variáveis necessárias (abaixo um exemplo):
+
+```bash
+MYSQL_ROOT_PASSWORD="root"
+MYSQL_DATABASE="dbname"
+MYSQL_PASSWORD="123456"
+MYSQL_USER="dbuser"
+```
+
+Crie o arquivo `.env` no diretório `api`, e preencha com as variáveis necessárias (abaixo um exemplo):
+
+```sh
+DATABASE_URL="mysql://dbuser:123456@db:3306/dbname"
+JWT_SECRET="jwtsecret"
+```
+
+Crie o arquivo `.env` no diretório `extension`, e preencha com as variáveis necessárias (abaixo um exemplo):
+
+```sh
+IMAGE_INLINE_SIZE_LIMIT=0
+INLINE_RUNTIME_CHUNK=false
+VITE_API_BASE_URL="http://localhost:3000"
+VITE_EMAIL_KEY="email"
+VITE_ERROR_KEY="errorMessage"
+VITE_TOKEN_KEY="access_token"
+```
+
+Suba os _containers_ com o docker compose:
 
 ```bash
 docker compose up -d
@@ -187,13 +216,6 @@ Em outro terminal, entre no _container_ da api e instale as dependências:
 docker compose exec api bash
 # já dentro do container
 npm install
-```
-
-Crie o arquivo `.env` na pasta `api`, e preencha com as variáveis necessárias (abaixo um exemplo):
-
-```sh
-DATABASE_URL="mysql://dbuser:123456@db:3306/dbname"
-JWT_SECRET="jwtsecret"
 ```
 
 Crie o banco de dados:
@@ -216,17 +238,6 @@ Em outro terminal, entre no _container_ da extensão e instale as dependências:
 docker compose exec extension bash
 # já dentro do container
 npm install
-```
-
-Crie o arquivo `.env` na pasta `extension` e preencha com as variáveis necessárias (abaixo um exemplo):
-
-```sh
-IMAGE_INLINE_SIZE_LIMIT=0
-INLINE_RUNTIME_CHUNK=false
-VITE_API_BASE_URL="http://localhost:3000"
-VITE_EMAIL_KEY="email"
-VITE_ERROR_KEY="errorMessage"
-VITE_TOKEN_KEY="access_token"
 ```
 
 ## ⚙️ Rodando o projeto

@@ -34,9 +34,7 @@ export const TodoItem = ({ item }: { item: Item }) => {
       <div className="flex-none w-[85px]">
         {item.completed ? (
           <div className="flex items-center gap-1">
-            <Badge className=" bg-cyan-200 text-cyan-600" variant={"outline"}>
-              Feito
-            </Badge>
+            <Badge variant={"done"}>Feito</Badge>
             <Button
               variant="destructive"
               size="icon"

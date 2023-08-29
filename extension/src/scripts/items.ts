@@ -17,19 +17,31 @@ export const getItems = async () => {
 export const createItem = async (payload: CreateItemRequestPayload) => {
   await storage.remove(errorKey);
   const data = await Api.items.create(payload);
-  data.ok ? getItems() : storage.setError(data.message);
+  data.ok
+    ? getItems()
+    : storage.setError(
+        "Não foi possível criar a tarefa. Tente novamente mais tarde",
+      );
 };
 
 export const completeItem = async (payload: ItemIdPayload) => {
   await storage.remove(errorKey);
   const data = await Api.items.markAsComplete(payload);
-  data.ok ? getItems() : storage.setError(data.message);
+  data.ok
+    ? getItems()
+    : storage.setError(
+        "Não foi possível marcar a tarefa como completa. Tente novamente mais tarde",
+      );
 };
 
 export const removeItem = async (payload: ItemIdPayload) => {
   await storage.remove(errorKey);
   const data = await Api.items.remove(payload);
-  data.ok ? getItems() : storage.setError(data.message);
+  data.ok
+    ? getItems()
+    : storage.setError(
+        "Não foi possível remover a tarefa. Tente novamente mais tarde",
+      );
 };
 
 async function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
@@ -39,6 +51,8 @@ async function processData(data: ApiSuccessData<Item[]> | ApiErrorMessage) {
       payload: data,
     });
   } else {
-    storage.setError(data.message);
+    storage.setError(
+      "Não foi possível carregar as tarefas. Tente novamente mais tarde",
+    );
   }
 }

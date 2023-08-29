@@ -34,11 +34,12 @@ export const useAuth = () => {
 
   useEffect(() => {
     const onStorageChanged: StorageChangesCallback = (changes) => {
-      if (changes[tokenKey]?.newValue !== undefined) {
+      const tokenChanges = changes[tokenKey];
+      if (tokenChanges?.newValue !== undefined) {
         setIsAuthorized(true);
         setEmail(changes[emailKey]?.newValue ?? "");
         getItems();
-      } else {
+      } else if (tokenChanges?.oldValue !== undefined) {
         setIsAuthorized(false);
         setEmail("");
         clearItems();

@@ -6,14 +6,10 @@ export class LoginDto {
 
   @IsNotEmpty()
   @IsStrongPassword(
-    {
-      minLength: 8,
-      minNumbers: 1,
-      minSymbols: 1,
-    },
+    {},
     {
       message:
-        'A senha precisa ter no mínimo 8 dígitos com pelo menos 1 número e 1 símbolo',
+        'A senha precisa ter no mínimo 8 dígitos com pelo menos 1 letra minúscula, 1 letra maiúscula, 1 número e 1 símbolo',
     },
   )
   password: string;

@@ -21,4 +21,9 @@ export const runtime = {
       return chrome.runtime.onInstalled.addListener(callback);
     },
   },
+  onStartup: {
+    addListener: (callback: () => void) => {
+      return chrome.runtime.onStartup.addListener(callback);
+    },
+  },
 };

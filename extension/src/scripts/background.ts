@@ -13,6 +13,16 @@ runtime.onInstalled.addListener(async () => {
   }
 });
 
+runtime.onStartup.addListener(async () => {
+  const accessToken = await storage.getToken();
+  if (accessToken !== undefined) {
+    const data = await Api.items.getAll();
+    if (data.ok) {
+      setBadge(data.data.filter((item) => !item.completed).length);
+    }
+  }
+});
+
 runtime.onMessage.addListener(async ({ type, payload }) => {
   switch (type) {
     case "LOGIN_REQUEST": {
